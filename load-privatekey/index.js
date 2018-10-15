@@ -8,10 +8,9 @@ async function main() {
 
   const address = account.address;
   w3.eth.getBalance(address, function(err, res) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(res)
+    if (!err) {
+      console.log('address: ', address);
+      console.log('ETH: ', res);
     }
   });
 }
