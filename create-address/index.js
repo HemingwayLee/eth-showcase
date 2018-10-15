@@ -1,9 +1,11 @@
 const fs = require('fs');
 const Web3 = require('web3');
-const w3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/M1QDKJ5S7583XBFF813PTT2C6X5QHN9ANQ'));
 const rs = require('randomstring');
 
 async function main() {
+  const url = 'https://ropsten.infura.io/' + process.env.API_KEY;
+  const w3 = new Web3(new Web3.providers.HttpProvider(url));
+
   let entropy = rs.generate(32);
   const account = w3.eth.accounts.create(entropy);
 
