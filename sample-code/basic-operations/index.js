@@ -21,7 +21,7 @@ async function main() {
 
   w3.eth.getBlock(4210587).then(console.log);
 
-  console.log(process.env.PRIVATE_KEY);
+  // console.log(process.env.PRIVATE_KEY);
 }
 
 main();
