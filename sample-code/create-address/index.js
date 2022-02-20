@@ -2,9 +2,12 @@ const fs = require('fs');
 const Web3 = require('web3');
 const rs = require('randomstring');
 
+require('dotenv').config();
+
 async function main() {
-  const url = 'https://ropsten.infura.io/' + process.env.API_KEY;
+  const url = 'https://ropsten.infura.io/v3/' + process.env.PROJECT_ID;
   const w3 = new Web3(new Web3.providers.HttpProvider(url));
+  // const w3 = new Web3("https://cloudflare-eth.com")  
 
   let entropy = rs.generate(32);
   const account = w3.eth.accounts.create(entropy);
