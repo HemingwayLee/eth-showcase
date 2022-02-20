@@ -3,8 +3,9 @@ const Web3 = require('web3');
 require('dotenv').config();
 
 async function main() {
-  const url = 'https://ropsten.infura.io/' + process.env.API_KEY;
+  const url = 'https://ropsten.infura.io/v3/' + process.env.PROJECT_ID;
   const w3 = new Web3(new Web3.providers.HttpProvider(url));
+  // const w3 = new Web3("https://cloudflare-eth.com")  
 
   w3.eth.accounts.wallet.add(process.env.PRIVATE_KEY);
   w3.eth.sendTransaction({
@@ -20,7 +21,6 @@ async function main() {
       console.log('transactionHash', transactionHash);
     }
   });
-
 }
 
 main();
