@@ -1,15 +1,15 @@
 {
-  "name": "eth-basic-operations",
+  "name": "deploy-smart-contract",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "author": "ywlee",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^6.1.0",
-    "web3": "^1.0.0-beta.36"
+    "dotenv": "^16.0.0",
+    "web3": "^1.7.0"
   }
 }
