@@ -1,5 +1,5 @@
 {
-  "name": "deploy-smart-contract",
+  "name": "is-address-smart-contract",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,3 +13,4 @@
     "web3": "^1.7.0"
   }
 }
+
