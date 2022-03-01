@@ -31,4 +31,10 @@ curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","metho
 * add miner
 * add pow
 
+# Ref
+* [official doc](https://github.com/ethereum/go-ethereum/blob/master/README.md)
+* [blog](https://medium.com/scb-digital/running-a-private-ethereum-blockchain-using-docker-589c8e6a4fe8)
+
+
+
 
