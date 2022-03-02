@@ -30,9 +30,14 @@ curl -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","metho
 * We can use [expedition](https://github.com/xops/expedition)
   * `--http.corsdomain="*"` need to be in geth options
 
+# Options
+* Ethereum networks have two identifiers, a `network ID` and a `chain ID`. Although they often have the same value, they have different uses. Peer-to-peer communication between nodes uses the network ID, while the transaction signature process uses the chain ID
+
 # TODO:
-* add miner
-* add pow
+* add miner, add pow (`ethash` in `genesis.json`)
+  * it seems `docker-compose.miner.yml`
+  * Ethereum has shifted from PoW to PoS consensus
+  * They don't need to mine blocks; they just need to create blocks when chosen and validate proposed blocks when they're not
 
 # Ref
 * [official doc](https://github.com/ethereum/go-ethereum/blob/master/README.md)
