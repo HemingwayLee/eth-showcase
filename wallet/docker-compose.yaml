@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  mydb:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: mywallet
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ls && npm start
+    environment:
+      DB_HOST: mydb
+      DB_PORT: 5432
+      DB_NAME: mywallet
+      DB_USER: postgres
+      DB_PASS: pass
+    volumes:
+      - "./src:/home/app/src"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mydb
