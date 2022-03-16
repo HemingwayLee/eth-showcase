@@ -11,7 +11,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ls && npm start
+    command: /home/app/init.sh
     environment:
       DB_HOST: mydb
       DB_PORT: 5432
