@@ -1,11 +1,11 @@
-const categoryModel = require("./category.model")
+const addressModel = require("./address.model")
+// const categoryModel = require("./category.model")
 
-exports.insertData = async (req, res) => {
-  const result = await categoryModel.insertData(req.params.name);
-  res.status(200).send(result);
-}
-
-exports.getAll = async (req, res) => {
-  const result = await categoryModel.getAll();
-  res.status(200).send(result);
+exports.getAllAddress = async (req, res) => {
+  const result = await addressModel.getAllAddress();
+  if (result.isSucceeded) {
+    res.status(200).send(result);
+  } else {
+    res.status(500).send(result);
+  }
 }

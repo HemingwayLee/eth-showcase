@@ -66,9 +66,9 @@
     try {
       var successful = document.execCommand('copy');
       var msg = successful ? 'successful' : 'unsuccessful';
-      $('#msg').val('Copying text command was ' + msg);
+      $('#msg').text('Copying text command was ' + msg);
     } catch (err) {
-      $('#msg').val('Oops, unable to copy');
+      $('#msg').text('Oops, unable to copy');
     }
   }
   

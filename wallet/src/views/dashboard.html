@@ -7,6 +7,7 @@
     {% include "sidebar.html" %}
     <div class="col-sm-9 main">
       <div class="row">
+        <div id="msg"></div>
         <div class="col-md-4">
           <div class="panel panel-primary"> 
             <div class="panel-body">
@@ -44,17 +45,54 @@
 
       <div class="row">
         <hr>
-        <h2>Click the Toggle button on the sidebar</h2>
-        <h5><span class="glyphicon glyphicon-time"></span> Post by Jane Dane, Sep 27, 2015.</h5>
-        <h5><span class="label label-danger">{{world}}</span> <span class="label label-primary">{{hello}}</span></h5><br>
-        <p>Food is my passion. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-        <br><br>
+        <h2>All Managed Addresses</h2>
+        <table id="allAddresses" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Private</th>
+              <th>Created At</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </div>
 
 <script>
+  function getAllAddresses() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/db/address/all/';
+    
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        // console.log(data);
+
+        $("#allAddresses tbody").empty();
+        
+        $.each(data.addresses, function(idx, ele) {
+          let tr = $("<tr>");
+          tr.append($("<td>").text(ele.address));
+          tr.append($("<td>").text(ele.privateKey));
+          tr.append($("<td>").text(ele.createdAt));
+          $("#allAddresses tbody").append(tr);
+        });
+      
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
+  $(document).ready(function() {
+    getAllAddresses();
+  });
 </script>
 
 {% endblock %}

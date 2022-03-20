@@ -1,6 +1,8 @@
 const Web3 = require('web3');
 const rs = require('randomstring');
 
+const modelAddress = require("../db/address.model")
+
 exports.create = async (req, res) => {
   console.log(Date.now())
 
@@ -10,7 +12,12 @@ exports.create = async (req, res) => {
   const entropy = rs.generate(32);
   const account = w3.eth.accounts.create(entropy);
 
-  res.status(200).send(account);
+  let result = await modelAddress.insertAddress(account);
+  if (result.isSucceeded) {
+    res.status(200).send(account);
+  } else {
+    res.status(500).send(result);
+  }
 }
 
 exports.send = async (req, res) => {

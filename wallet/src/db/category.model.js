@@ -1,4 +1,3 @@
-
 const orm = require("./db.config")
 
 exports.insertData = async aName => {
