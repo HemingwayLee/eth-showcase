@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sample Eth Wallet</title>
+  <link href="https://fonts.googleapis.com/css?family=Dosis:400,600,800" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $("#toggle").on("click", function() {
+        $(".sidenav").toggleClass("activeside");
+        $(".main").toggleClass("activemain");
+        $(".main").toggleClass("col-sm-9 col-sm-11");
+        $(".need2Collapsed").toggleClass("collapse");
+      });
+
+      const urlDashboard = window.location.protocol + "//" + window.location.host + '/';
+      document.getElementById("dashboard").firstElementChild.setAttribute("href", urlDashboard);
+
+      const urlTokens = window.location.protocol + "//" + window.location.host + '/page/tokens';
+      document.getElementById("tokens").firstElementChild.setAttribute("href", urlTokens);
+
+      const urlAddresses = window.location.protocol + "//" + window.location.host + '/page/addresses';
+      document.getElementById("addresses").firstElementChild.setAttribute("href", urlAddresses);
+    });
+  </script>
+  <style>
+    .row.content {height: 1500px}
+    
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+      width: 250px;
+      position: fixed;
+      transition: 0.3s;
+    }
+    
+    .main {
+      margin-left: 250px;
+      transition: 0.3s;
+    }
+    
+    .activeside {
+      /* margin-left: -250px; */
+      width: 80px;
+      transition: 0.3s;
+    }
+    
+    .activemain {
+      margin-left: 80px !important; /* override css */
+      transition: 0.3s;
+    }
+    
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+  </style>
+</head>
+<body>
+  {% block content %} {% endblock %}
+</body>
+</html>

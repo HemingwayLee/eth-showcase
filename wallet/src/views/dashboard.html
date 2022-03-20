@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row content">
+    {% include "sidebar.html" %}
+    <div class="col-sm-9 main">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="panel panel-primary"> 
+            <div class="panel-body">
+              <div style="display:block;"> 
+                <i style="font-size: 72px" class="pull-right fas fa-address-card"></i> 
+                <h1 id="">85</h1>
+                <h4>Address</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="panel panel-primary"> 
+            <div class="panel-body">
+              <div style="display:block;"> 
+                <i style="font-size: 72px" class="pull-right fas fa-file-signature"></i> 
+                <h1 id="">85</h1>
+                <h4>Smart Contract</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="panel panel-primary"> 
+            <div class="panel-body">
+              <div style="display:block;"> 
+                <i style="font-size: 72px" class="pull-right glyphicon glyphicon-picture"></i> 
+                <h1 id="">85</h1>
+                <h4>ERC-721 Token</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <hr>
+        <h2>Click the Toggle button on the sidebar</h2>
+        <h5><span class="glyphicon glyphicon-time"></span> Post by Jane Dane, Sep 27, 2015.</h5>
+        <h5><span class="label label-danger">{{world}}</span> <span class="label label-primary">{{hello}}</span></h5><br>
+        <p>Food is my passion. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+</script>
+
+{% endblock %}

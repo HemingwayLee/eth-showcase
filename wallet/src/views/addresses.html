@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .center_div {
+    margin: 0 auto;
+    width: 60%;
+    padding: 20px;
+    background-color: #f1f1f1; 
+  }
+</style>
+
+<div class="container-fluid">
+  <div class="row content">
+    {% include "sidebar.html" %}
+    <div class="col-sm-9 main">
+      <div id="msg"></div>
+      <div class="center_div">
+        <center><i style="font-size: 72px" class="fab fa-ethereum"></i></center>
+        <h1 class="h3" style="text-align: center;">Create Address</h1>
+        <label for="publickey">Public Key</label>
+        <div class="input-group">
+          <input id="publickey" class="form-control" placeholder="Public Key" readonly>
+          <div class="input-group-btn">
+            <button class="btn btn-primary" onclick="copy2Clipboard('#publickey');"><i class="fas fa-copy"></i> Copy</button>
+          </div>
+        </div>
+
+        <label for="privatekey">Private Key</label>
+        <div class="input-group">
+          <input id="privatekey" class="form-control" placeholder="Private Key" readonly>
+          <div class="input-group-btn">
+            <button class="btn btn-primary" onclick="copy2Clipboard('#privatekey');"><i class="fas fa-copy"></i> Copy</button>
+          </div>
+        </div>
+        <hr>
+        <button class="btn btn-primary btn-block" onclick="createAddress();"><i class="fas fa-plus"></i> Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function createAddress() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/eth/create/';
+    
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        $("#publickey").val(data["address"])
+        $("#privatekey").val(data["privateKey"])
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
+  function copy2Clipboard(id) {
+    var copyTextarea = document.querySelector(id);
+    copyTextarea.focus();
+    copyTextarea.select();
+
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      $('#msg').val('Copying text command was ' + msg);
+    } catch (err) {
+      $('#msg').val('Oops, unable to copy');
+    }
+  }
+  
+</script>
+
+{% endblock %}

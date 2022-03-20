@@ -11,9 +11,17 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.0",
+    "randomstring": "^1.2.2",
     "express": "^4.17.3",
+    "nunjucks": "^3.2.3",
     "pg": "^8.7.3",
     "typeorm": "^0.2.45",
     "web3": "^1.7.1"
+  },
+  "nodemonConfig": {
+    "watch": [
+       "./src"
+    ],
+    "ext": "js,mjs,json,css,html"
   }
 }

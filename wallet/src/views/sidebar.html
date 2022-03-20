@@ -1,0 +1,16 @@
+<div class="col-sm-3 sidenav">
+  <center><h4>My Wallet</h4></center>
+  <ul class="nav nav-pills nav-stacked" id="menu">
+    <li id="dashboard"><a href="javascript:void(0);"><i class="fas fa-chart-pie"></i> <span class="need2Collapsed"> Dashboard</span></a></li>
+    <li id="addresses"><a href="javascript:void(0);"><i class="fas fa-address-card"></i> <span class="need2Collapsed"> Create Address</span></a></li>
+    <li id="tokens"><a href="javascript:void(0);"><i class="fas fa-image"></i> <span class="need2Collapsed"> ERC-721 Tokens</span></a></li>
+    <li><a id="toggle" href="javascript:void(0);"><i class="fas fa-toggle-on"></i> <span class="need2Collapsed"> Toggle</span></a></li>
+  </ul>
+</div>
+
+<script>
+  const pageId = {{ pageid | dump | safe}};
+  console.log(pageId);
+
+  $(`#${pageId}`).addClass("active");
+</script>
