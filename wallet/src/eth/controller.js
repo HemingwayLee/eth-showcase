@@ -1,7 +1,8 @@
 const Web3 = require('web3');
 const rs = require('randomstring');
-
-const modelAddress = require("../db/address.model")
+const solc = require('solc');
+const modelAddress = require("../db/address.model");
+const modelSmartContract = require("../db/smartContract.model")
 
 exports.create = async (req, res) => {
   const url = `https://ropsten.infura.io/v3/${process.env.PROJECT_ID}`;
@@ -56,3 +57,40 @@ exports.addAccount = async (req, res) => {
   }
 }
 
+exports.deploySmartContract = async (req, res) => {
+  const { addr, idx } = req.body;
+
+  let result = await modelSmartContract.getSmartContractById(idx);
+  var input = {
+    language: 'Solidity',
+    sources: {
+      [`${result.theContract.title}`]: {
+        content: result.theContract.code
+      }
+    },
+    settings: {
+      outputSelection: {
+        '*': {
+          '*': ['*']
+        }
+      }
+    }
+  };
+
+  var output = JSON.parse(solc.compile(JSON.stringify(input)));
+  // console.log(output);
+  console.log(output.contracts[`${result.theContract.title}`]["SimpleStorage"].abi);
+  console.log(output.contracts[`${result.theContract.title}`]["SimpleStorage"].evm.bytecode.object);
+
+  const url = `https://ropsten.infura.io/v3/${process.env.PROJECT_ID}`;
+  const w3 = new Web3(new Web3.providers.HttpProvider(url));
+
+  
+
+  // let result = await modelAddress.insertAddress(account);
+  // if (result.isSucceeded) {
+  //   res.status(200).send(account);
+  // } else {
+  //   res.status(500).send(result);
+  // }
+}

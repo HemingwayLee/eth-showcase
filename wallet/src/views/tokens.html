@@ -20,6 +20,8 @@
       <div class="center_div">
         <center><i style="font-size: 72px" class="fas fa-file-signature"></i></center>
         <h1 class="h3" style="text-align: center;">Add Your Smart Contract to Database</h1>
+        <label for="title">Title</label>
+        <input id="title" class="form-control" placeholder="Title">
         <label for="solidityCode">New Solidity Code</label>
         <textarea style="font-size: 16px;" class="form-control" rows="15" id="solidityCode"></textarea>
         <button class="btn btn-primary btn-block" onclick="saveSmartContract();"><i class="fas fa-plus"></i> Save to Database</button>
@@ -28,7 +30,7 @@
       <div class="center_div">
         <center><i style="font-size: 72px" class="fas fa-cubes"></i></center>
         <h1 class="h3" style="text-align: center;">Deploy Smart Contract to Blackchain</h1>
-        <label for="solidityCode">Existing Solidity Code in Database</label>
+        <label for="allSmartContracts">Existing Solidity Code in Database</label>
         <select class="form-control" id="allSmartContracts">
         </select>
         <pre><code class="language-javascript" id="theCode"></code></pre>
@@ -56,11 +58,13 @@
         gAllSmartContracts = [];
 
         $.each(data.smartContracts, function(idx, ele) {
-          $('#allSmartContracts').append(new Option(idx, idx));
-          gAllSmartContracts.push({"idx": idx, "code": ele.code});
+          $('#allSmartContracts').append(new Option(ele.title, ele.id));
+          gAllSmartContracts.push({"idx": ele.id, "code": ele.code});
         });
 
-        $('#allSmartContracts').trigger("change");
+        if (gAllSmartContracts.length > 0) {
+          $('#allSmartContracts').trigger("change");
+        }
       },
       error: function(xhr, textStatus, errorThrown) {
         $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
@@ -74,6 +78,7 @@
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({
+        title: $("#title").val(),
         code: $("#solidityCode").val()
       }),
       dataType: 'json',
@@ -100,7 +105,9 @@
           $('#allAddresses').append(new Option(ele.address, ele.address));
         });
 
-        $('#allAddresses').trigger("change");
+        if (data.addresses.length > 0) {
+          $('#allAddresses').trigger("change"); 
+        }
       },
       error: function(xhr, textStatus, errorThrown) {
         $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
@@ -117,6 +124,26 @@
       url: urlTarget,
       success: function(data) {
         $("#theBalance").text(` ${data["balance"]}`);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
+  function deploySmartContract() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/eth/smartcontract/deploy';
+    $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        addr: $('#allAddresses option:selected').val(),
+        idx: $('#allSmartContracts option:selected').val()
+      }),
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        alert("SUCCEEDED");
       },
       error: function(xhr, textStatus, errorThrown) {
         $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);

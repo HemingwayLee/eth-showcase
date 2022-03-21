@@ -11,8 +11,8 @@ exports.getAllAddress = async (req, res) => {
 }
 
 exports.addSmartContract = async (req, res) => {
-  const { code } = req.body;
-  const result = await smartContractModel.addSmartContract(code);
+  const { title, code } = req.body;
+  const result = await smartContractModel.addSmartContract(title, code);
   if (result.isSucceeded) {
     res.status(200).send(result);
   } else {

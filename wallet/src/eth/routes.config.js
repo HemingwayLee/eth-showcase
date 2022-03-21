@@ -13,5 +13,9 @@ exports.routesConfig = function(app) {
   app.post('/eth/add/', [
     ethController.addAccount
   ]);
+
+  app.post('/eth/smartcontract/deploy/', [
+    ethController.deploySmartContract
+  ]);
 }
 

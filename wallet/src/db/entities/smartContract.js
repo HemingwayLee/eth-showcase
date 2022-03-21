@@ -6,6 +6,9 @@ module.exports = {
       type: "int",
       generated: true
     },
+    title: {
+      type: "varchar"
+    },
     code: {
       type: "text"
     },
