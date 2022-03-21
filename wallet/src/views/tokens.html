@@ -2,20 +2,85 @@
 
 {% block content %}
 
+<style>
+  .center_div {
+    margin: 0 auto;
+    width: 80%;
+    padding: 20px;
+    background-color: #f1f1f1; 
+  }
+</style>
+
 <div class="container-fluid">
   <div class="row content">
     {% include "sidebar.html" %}
     <div class="col-sm-9 main">
-      <h4><small>I Love Gitlab-like sidebar</small></h4>
-      <hr>
-      <h2>Click the Toggle button on the sidebar</h2>
-      <h1>Photos</h1>
-      <br><br>
+      <div class="center_div">
+        <center><i style="font-size: 72px" class="fas fa-file-signature"></i></center>
+        <h1 class="h3" style="text-align: center;">Add Your Smart Contract to Database</h1>
+        <label for="solidityCode">Solidity Code</label>
+        <textarea style="font-size: 16px;" class="form-control" rows="15" id="solidityCode"></textarea>
+        <button class="btn btn-primary btn-block" onclick="saveSmartContract();"><i class="fas fa-plus"></i> Save to Database</button>
+        <hr>
+        <label for="allAddresses">Address in database</label>
+        <select class="form-control" id="allAddresses">
+        </select>
+        <label>Balance in the selected address: </label><span style="font-size: 22px;" id="theBalance"></span>
+        <button class="btn btn-primary btn-block" onclick="deploySmartContract();"><i class="fas fa-cube"></i> Deploy Smart Contract to Blackchain</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+  function saveSmartContract() {
+    console.log($("#solidityCode").val());
+  }
+
+  function getAllAddresses() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/db/address/all/';
+    
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        // $("#allAddresses").empty();
+        $.each(data.addresses, function(idx, ele) {
+          $('#allAddresses').append(new Option(ele.address, ele.address));
+        });
+
+        $('#allAddresses').trigger("change");
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
+  function getBalance(addr) {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/eth/balance/' + addr;
+    
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        $("#theBalance").text(` ${data["balance"]}`);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
+  $("#allAddresses").change(function() {
+    getBalance($(this).val());
+  });
+
+  $(document).ready(function() {
+    getAllAddresses();
+  });
 </script>
 
 {% endblock %}

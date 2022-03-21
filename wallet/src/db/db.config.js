@@ -16,7 +16,7 @@ exports.conn = typeorm.createConnection({
   database: name,
   synchronize: true,
   entities: [
-    new entitySchema(require("./entities/category")),
+    new entitySchema(require("./entities/smartContract")),
     new entitySchema(require("./entities/addresses"))
   ]
 });

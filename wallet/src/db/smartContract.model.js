@@ -4,7 +4,7 @@ exports.insertData = async aName => {
   let result = [];
 
   await orm.conn.then(async conn => {
-    const repo = await conn.getRepository("Category");
+    const repo = await conn.getRepository("SmartContract");
     result = await repo.save({
       name: aName
     });
@@ -19,7 +19,7 @@ exports.getAll = async () => {
   let result = [];
   
   await orm.conn.then(async conn => {
-    const repo = await conn.getRepository("Category");
+    const repo = await conn.getRepository("SmartContract");
     result = await repo.find();
   }).catch(error => {
     console.log(error);

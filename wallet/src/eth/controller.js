@@ -30,7 +30,7 @@ exports.getBalance = async (req, res) => {
     } else {
       let result = await modelAddress.updateBalance(addr, balance);
       if (result.isSucceeded) {
-        res.status(200).send({"balance": balance});
+        res.status(200).send({"balance": w3.utils.fromWei(balance, 'ether')});
       } else {
         res.status(500).send(result);
       } 
@@ -55,3 +55,4 @@ exports.addAccount = async (req, res) => {
     res.status(500).send(result);
   }
 }
+
