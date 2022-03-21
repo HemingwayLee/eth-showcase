@@ -24,7 +24,7 @@
             <div class="panel-body">
               <div style="display:block;"> 
                 <i style="font-size: 72px" class="pull-right fas fa-file-signature"></i> 
-                <h1 id="">85</h1>
+                <h1 id="countSmartContract"></h1>
                 <h4>Smart Contract</h4>
               </div>
             </div>
@@ -99,6 +99,22 @@
     });
   }
 
+  function getAllSmartContracts() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/db/smartcontract/all/';
+    
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        $("#countSmartContract").text(data.smartContracts.length);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
   function getBalance(idx) {
     // console.log(gAllAddresses.filter(x => x.idx == idx));
     const addr = gAllAddresses.filter(x => x.idx == idx)[0].address;
@@ -119,6 +135,7 @@
 
   $(document).ready(function() {
     getAllAddresses();
+    getAllSmartContracts();
   });
 </script>
 

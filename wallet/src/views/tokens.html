@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
 <style>
   .center_div {
     margin: 0 auto;
@@ -18,23 +20,71 @@
       <div class="center_div">
         <center><i style="font-size: 72px" class="fas fa-file-signature"></i></center>
         <h1 class="h3" style="text-align: center;">Add Your Smart Contract to Database</h1>
-        <label for="solidityCode">Solidity Code</label>
+        <label for="solidityCode">New Solidity Code</label>
         <textarea style="font-size: 16px;" class="form-control" rows="15" id="solidityCode"></textarea>
         <button class="btn btn-primary btn-block" onclick="saveSmartContract();"><i class="fas fa-plus"></i> Save to Database</button>
-        <hr>
-        <label for="allAddresses">Address in database</label>
+      </div>  
+      <hr>
+      <div class="center_div">
+        <center><i style="font-size: 72px" class="fas fa-cubes"></i></center>
+        <h1 class="h3" style="text-align: center;">Deploy Smart Contract to Blackchain</h1>
+        <label for="solidityCode">Existing Solidity Code in Database</label>
+        <select class="form-control" id="allSmartContracts">
+        </select>
+        <pre><code class="language-javascript" id="theCode"></code></pre>
+        <label for="allAddresses">Address in Database</label>
         <select class="form-control" id="allAddresses">
         </select>
         <label>Balance in the selected address: </label><span style="font-size: 22px;" id="theBalance"></span>
-        <button class="btn btn-primary btn-block" onclick="deploySmartContract();"><i class="fas fa-cube"></i> Deploy Smart Contract to Blackchain</button>
+        <button class="btn btn-primary btn-block" onclick="deploySmartContract();"><i class="fas fa-cube"></i> Deploy to Blackchain</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
+  let gAllSmartContracts = [];
+
+  function getAllSmartContracts() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/db/smartcontract/all/';
+    
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        gAllSmartContracts = [];
+
+        $.each(data.smartContracts, function(idx, ele) {
+          $('#allSmartContracts').append(new Option(idx, idx));
+          gAllSmartContracts.push({"idx": idx, "code": ele.code});
+        });
+
+        $('#allSmartContracts').trigger("change");
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
   function saveSmartContract() {
-    console.log($("#solidityCode").val());
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/db/smartcontract/add';
+    $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        code: $("#solidityCode").val()
+      }),
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        alert("SUCCEEDED");
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
   }
 
   function getAllAddresses() {
@@ -74,12 +124,21 @@
     });
   }
 
+  $("#allSmartContracts").change(function() {
+    const idx = $(this).val();
+    const code = gAllSmartContracts.filter(x => x.idx == idx)[0].code
+
+    $("#theCode").text(code);
+    hljs.highlightAll();
+  });
+
   $("#allAddresses").change(function() {
     getBalance($(this).val());
   });
 
   $(document).ready(function() {
     getAllAddresses();
+    getAllSmartContracts();
   });
 </script>
 
