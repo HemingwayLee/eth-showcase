@@ -17,7 +17,7 @@
       <div id="msg"></div>
       <div class="center_div">
         <center><i style="font-size: 72px" class="fab fa-ethereum"></i></center>
-        <h1 class="h3" style="text-align: center;">Create Address</h1>
+        <h1 class="h3" style="text-align: center;">Create New Address</h1>
         <label for="publickey">Public Key</label>
         <div class="input-group">
           <input id="publickey" class="form-control" placeholder="Public Key" readonly>
@@ -36,11 +36,46 @@
         <hr>
         <button class="btn btn-primary btn-block" onclick="createAddress();"><i class="fas fa-plus"></i> Create</button>
       </div>
+      <hr>
+      <div class="center_div">
+        <center><i style="font-size: 72px" class="fab fa-ethereum"></i></center>
+        <h1 class="h3" style="text-align: center;">Add Your Address to Database</h1>
+        <label for="publickeyAdd">Public Key</label>
+        <input id="publickeyAdd" class="form-control" placeholder="Public Key">
+        <label for="privatekeyAdd">Private Key</label>
+        <input id="privatekeyAdd" class="form-control" placeholder="Private Key">
+        <hr>
+        <button class="btn btn-primary btn-block" onclick="addAddress();"><i class="fas fa-plus"></i> Add</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+  function addAddress() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/eth/add/';
+    
+    console.log($("#publickeyAdd").val());
+    console.log($("#privatekeyAdd").val());
+
+    $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        publickey: $("#publickeyAdd").val(),
+        privatekey: $("#privatekeyAdd").val()
+      }),
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        alert("SUCCEEDED");
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
   function createAddress() {
     const urlTarget = window.location.protocol + "//" + window.location.host + '/eth/create/';
     

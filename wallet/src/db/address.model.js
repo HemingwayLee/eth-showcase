@@ -18,6 +18,26 @@ exports.insertAddress = async account => {
   return result;
 }
 
+exports.updateBalance = async (address, balance) => {
+  let result = { isSucceeded: true };
+
+  await orm.conn.then(async conn => {
+    const repo = await conn.getRepository("Addresses");
+    await repo.update( 
+      { address: address },
+      {
+        balance: balance,
+        gotBalanceAt: Date.now()
+      }
+    );
+  }).catch(error => {
+    result = { isSucceeded: false, msg: error.message }
+    console.log(error);
+  });
+
+  return result;
+}
+
 exports.getAllAddress = async () => {
   let result = { isSucceeded: true, addresses: [] };
   

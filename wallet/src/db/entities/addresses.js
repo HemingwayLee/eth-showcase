@@ -15,5 +15,13 @@ module.exports = {
     createdAt: {
       type: "float"
     },
+    balance: {
+      type: "float",
+      default: 0
+    },
+    gotBalanceAt: {
+      type: "float",
+      default: 0
+    }
   }
 }

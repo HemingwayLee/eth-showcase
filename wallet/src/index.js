@@ -1,4 +1,5 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const dbRoutes = require('./db/routes.config')
 const ethRoutes = require('./eth/routes.config')
 const pageRoutes = require('./page/routes.config')
@@ -13,6 +14,10 @@ function addRoutes(app) {
 
 function runExpress() {
   const app = express();
+
+  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(bodyParser.json())
+
   addRoutes(app);
 
   app.listen(3000);

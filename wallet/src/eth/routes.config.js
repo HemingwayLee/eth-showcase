@@ -6,12 +6,12 @@ exports.routesConfig = function(app) {
     ethController.create
   ]);
 
-  app.get('/eth/balance/', [
-    ethController.create
+  app.get('/eth/balance/:addr', [
+    ethController.getBalance
   ]);
 
-  app.get('/eth/send/', [
-    ethController.send
+  app.post('/eth/add/', [
+    ethController.addAccount
   ]);
 }
 
