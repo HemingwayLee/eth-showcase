@@ -28,3 +28,4 @@ exports.getAllSmartContract = async (req, res) => {
     res.status(500).send(result);
   }
 }
+

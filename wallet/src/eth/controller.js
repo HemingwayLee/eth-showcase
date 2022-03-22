@@ -39,6 +39,7 @@ exports.getBalance = async (req, res) => {
   });
 }
 
+
 exports.addAccount = async (req, res) => {
   const { publickey, privatekey } = req.body;
   const account = {

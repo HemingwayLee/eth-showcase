@@ -69,6 +69,7 @@
       url: urlTarget,
       success: function(data) {
         alert("SUCCEEDED");
+        window.location.reload();
       },
       error: function(xhr, textStatus, errorThrown) {
         $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
