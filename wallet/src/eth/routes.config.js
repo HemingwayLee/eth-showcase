@@ -10,6 +10,10 @@ exports.routesConfig = function(app) {
     ethController.getBalance
   ]);
 
+  app.post('/eth/transaction/all/block/:count', [
+    ethController.getLatestTransactions
+  ]);
+
   app.post('/eth/add/', [
     ethController.addAccount
   ]);

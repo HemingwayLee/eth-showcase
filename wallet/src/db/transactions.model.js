@@ -4,7 +4,7 @@ exports.insertAddress = async account => {
   let result = { isSucceeded: true };
 
   await orm.conn.then(async conn => {
-    const repo = await conn.getRepository("Addresses");
+    const repo = await conn.getRepository("Transactions");
     await repo.save({
       address: account.address,
       privateKey: account.privateKey,
@@ -21,19 +21,19 @@ exports.insertAddress = async account => {
 exports.updateBalance = async (address, balance) => {
   let result = { isSucceeded: true };
 
-  await orm.conn.then(async conn => {
-    const repo = await conn.getRepository("Addresses");
-    await repo.update( 
-      { address: address },
-      {
-        balance: balance,
-        gotBalanceAt: Date.now()
-      }
-    );
-  }).catch(error => {
-    result = { isSucceeded: false, msg: error.message }
-    console.log(error);
-  });
+//   await orm.conn.then(async conn => {
+//     const repo = await conn.getRepository("Transactions");
+//     await repo.update( 
+//       { address: address },
+//       {
+//         balance: balance,
+//         gotBalanceAt: Date.now()
+//       }
+//     );
+//   }).catch(error => {
+//     result = { isSucceeded: false, msg: error.message }
+//     console.log(error);
+//   });
 
   return result;
 }

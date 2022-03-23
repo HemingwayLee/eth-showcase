@@ -18,6 +18,7 @@ exports.conn = typeorm.createConnection({
   entities: [
     new entitySchema(require("./entities/smartContract")),
     new entitySchema(require("./entities/addresses")),
-    new entitySchema(require("./entities/deployedSmartContract"))
+    new entitySchema(require("./entities/deployedSmartContract")),
+    new entitySchema(require("./entities/transactions"))
   ]
 });

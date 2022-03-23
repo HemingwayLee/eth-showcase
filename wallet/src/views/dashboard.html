@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
 <div class="container-fluid">
   <div class="row content">
     {% include "sidebar.html" %}
@@ -51,11 +53,23 @@
           <thead>
             <tr>
               <th>Address</th>
-              <th>Private</th>
               <th>Created At</th>
               <th>Balance</th>
               <th>Got Balance At</th>
               <th>Get Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <hr>
+        <h2>My Transactions in latest 5 blocks</h2>
+        <table id="allTransactions" class="table table-striped">
+          <thead>
+            <tr>
+              <th>Transaction</th>
+              <th>Address</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -85,13 +99,14 @@
 
           let tr = $("<tr>");
           tr.append($("<td>").text(ele.address));
-          tr.append($("<td>").text(ele.privateKey));
-          tr.append($("<td>").text(ele.createdAt));
+          tr.append($("<td>").text(moment.utc(ele.createdAt).fromNow()));
           tr.append($("<td>").text(ele.balance));
-          tr.append($("<td>").text(ele.gotBalanceAt));
+          tr.append($("<td>").text(moment.utc(ele.gotBalanceAt).fromNow()));
           tr.append($("<td>").append($(`<button class="btn btn-primary" onclick="getBalance('${idx}');">`).text("Get Balance")));
           $("#allAddresses tbody").append(tr);
         });
+
+        getAllTransactions();
       
       },
       error: function(xhr, textStatus, errorThrown) {
@@ -109,6 +124,30 @@
       url: urlTarget,
       success: function(data) {
         $("#countSmartContract").text(data.smartContracts.length);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
+  function getAllTransactions() {
+    if (gAllAddresses.length == 0) {
+      return;
+    }
+
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/eth/transaction/all/block/5';
+    
+    $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        addresses: gAllAddresses.map(x => x.address)
+      }),
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        console.log(data);
       },
       error: function(xhr, textStatus, errorThrown) {
         $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
