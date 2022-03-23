@@ -19,7 +19,8 @@ async function main() {
   })
   .send({
     from: process.env.PUBLIC_KEY,
-    gas: 3500000
+    //21,000 at least
+    gas: 3500000 
   })
   .on('error', function(error) {
     console.log('error ', error);
