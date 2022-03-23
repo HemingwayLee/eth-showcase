@@ -15,20 +15,21 @@ module.exports = {
     address: {
       type: "varchar"
     },
-    creator: {
-      type: "int"
+    transaction: {
+      type: "varchar"
     },
     deployedAt: {
       type: "float"
     }
-  },
-  relations: {
-    deployedContracts: {
-      target: "Addresses",
-      type: "many-to-one",
-      joinColumn: {
-        name: "creator"
-      }
-    }
   }
+  // TODO: worry about relation in the future
+  // relations: {
+  //   deployedContracts: {
+  //     target: "Addresses",
+  //     type: "many-to-one",
+  //     joinColumn: {
+  //       name: "creator"
+  //     }
+  //   }
+  // }
 }

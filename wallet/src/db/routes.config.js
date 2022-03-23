@@ -5,8 +5,16 @@ exports.routesConfig = function(app) {
     dbController.getAllAddress
   ]);
 
+  app.get('/db/transaction/all', [
+    dbController.getAllTransaction
+  ]);
+
   app.get('/db/smartcontract/all', [
     dbController.getAllSmartContract
+  ]);
+
+  app.get('/db/smartcontract/deployed/all', [
+    dbController.getAllDeployedSmartContract
   ]);
 
   app.post('/db/smartcontract/add', [

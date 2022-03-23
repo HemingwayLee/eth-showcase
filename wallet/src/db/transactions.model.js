@@ -1,13 +1,14 @@
 const orm = require("./db.config")
 
-exports.insertAddress = async account => {
+exports.insertTransaction = async data => {
   let result = { isSucceeded: true };
 
   await orm.conn.then(async conn => {
     const repo = await conn.getRepository("Transactions");
     await repo.save({
-      address: account.address,
-      privateKey: account.privateKey,
+      hash: data.hash,
+      from: data.from,
+      type: data.type,
       createdAt: Date.now()
     });
   }).catch(error => {
@@ -18,48 +19,17 @@ exports.insertAddress = async account => {
   return result;
 }
 
-exports.updateBalance = async (address, balance) => {
+exports.updateTransaction = async (data) => {
   let result = { isSucceeded: true };
 
-//   await orm.conn.then(async conn => {
-//     const repo = await conn.getRepository("Transactions");
-//     await repo.update( 
-//       { address: address },
-//       {
-//         balance: balance,
-//         gotBalanceAt: Date.now()
-//       }
-//     );
-//   }).catch(error => {
-//     result = { isSucceeded: false, msg: error.message }
-//     console.log(error);
-//   });
-
-  return result;
-}
-
-exports.getAllAddress = async () => {
-  let result = { isSucceeded: true, addresses: [] };
-  
   await orm.conn.then(async conn => {
-    const repo = await conn.getRepository("Addresses");
-    result.addresses = await repo.find();
-  }).catch(error => {
-    result = { isSucceeded: false, msg: error.message }
-    console.log(error);
-  });
-
-  return result;
-}
-
-exports.getAccountById = async (addr) => {
-  let result = { isSucceeded: true, addresses: [] };
-  
-  await orm.conn.then(async conn => {
-    const repo = await conn.getRepository("Addresses");
-    result.theAccount = await repo.findOne(
-      { 
-        where: { address: addr }
+    const repo = await conn.getRepository("Transactions");
+    await repo.update( 
+      { hash: data.transactionHash },
+      {
+        status: data.status,
+        to: data.contractAddress,
+        mined: true
       }
     );
   }).catch(error => {
@@ -69,3 +39,35 @@ exports.getAccountById = async (addr) => {
 
   return result;
 }
+
+exports.getAllTransactions = async () => {
+  let result = { isSucceeded: true, transactions: [] };
+  
+  await orm.conn.then(async conn => {
+    const repo = await conn.getRepository("Transactions");
+    result.transactions = await repo.find();
+  }).catch(error => {
+    result = { isSucceeded: false, msg: error.message }
+    console.log(error);
+  });
+
+  return result;
+}
+
+// exports.getAccountById = async (addr) => {
+//   let result = { isSucceeded: true, addresses: [] };
+  
+//   await orm.conn.then(async conn => {
+//     const repo = await conn.getRepository("Addresses");
+//     result.theAccount = await repo.findOne(
+//       { 
+//         where: { address: addr }
+//       }
+//     );
+//   }).catch(error => {
+//     result = { isSucceeded: false, msg: error.message }
+//     console.log(error);
+//   });
+
+//   return result;
+// }

@@ -10,13 +10,23 @@ module.exports = {
       type: "varchar"
     },
     status: {
-      type: "boolean"
+      type: "boolean",
+      default: false
     },
     type: {
+      type: "varchar",
+      default: null
+    },
+    from: {
       type: "varchar"
     },
-    address: {
-      type: "varchar"
+    to: {
+      type: "varchar",
+      default: null
+    },
+    mined: {
+      type: "boolean",
+      default: false
     },
     createdAt: {
       type: "float"

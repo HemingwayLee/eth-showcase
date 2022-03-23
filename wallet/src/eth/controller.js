@@ -3,6 +3,8 @@ const rs = require('randomstring');
 const solc = require('solc');
 const modelAddress = require("../db/address.model");
 const modelSmartContract = require("../db/smartContract.model")
+const modelTransaction = require("../db/transactions.model")
+const modelDeployedSmartContract = require("../db/deployedSmartContract.model")
 
 function _range(start, stop, step) {
   if (typeof stop == 'undefined') {
@@ -156,26 +158,27 @@ exports.deploySmartContract = async (req, res) => {
     })
     .on('transactionHash', function(hash) {
       console.log('transaction hash ', hash);
-      w3.eth.getTransactionReceipt(hash, function (err, data) {
-        console.log("=== contract transaction ===")
-        console.log(data);
-        // if (err) {
-        //   console.log(err);
-        // } else {
-        //   console.log(data);
-        //   if (data.status == '0x0') {
-        //     console.log("The trx execution was not successful, check your transaction !");
-        //   } else {
-        //     console.log("Execution worked fine!");
-        //   }
-        // }
+      w3.eth.getTransaction(hash, async function (err, data) {
+        const ret = await modelTransaction.insertTransaction(data);
       });
     })
-    .on('receipt', function(receipt) {
-      console.log('!!!! receipt !!!!!!');
-      console.log(receipt)
-      console.log('!!!! receipt !!!!!!');
-      res.status(200).send({ isSucceeded: true });
+    .on('receipt', async function(receipt) {
+      console.log('Transaction is mined');
+      const ret1 = await modelTransaction.updateTransaction(receipt);
+      if (ret1.isSucceeded) {
+        const ret2 = await modelDeployedSmartContract.addDeployedSmartContract(
+          abi, 
+          bytecode, 
+          receipt.contractAddress,
+          receipt.transactionHash);
+        if (ret2.isSucceeded) {
+          res.status(200).send({ isSucceeded: true });
+        } else {
+          res.status(500).send(ret2);
+        }
+      } else {
+        res.status(500).send(ret1);
+      }
     })
     .on('confirmation', function(confirmationNum, receipt) {
       console.log('confirmation ', confirmationNum);
@@ -184,20 +187,10 @@ exports.deploySmartContract = async (req, res) => {
       console.log('then ', newContractInstance.options.address);
     })
     .catch((err) => {
-      console.log("!!!!!! then error");
       res.status(500).send({ isSucceeded: true, msg: error.message });
       return;
     });
-
-    // let result = await modelAddress.insertAddress(account);
-    // if (result.isSucceeded) {
-    //   res.status(200).send(account);
-    // } else {
-    //   res.status(500).send(result);
-    // }
   } catch (error) {
-    console.log("catch!!!!!!!")
-    // console.log(error);
     res.status(500).send({ isSucceeded: false, msg: error.message });
   }
 }

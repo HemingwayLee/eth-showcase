@@ -19,7 +19,7 @@
     <div class="col-sm-9 main">
       <div class="center_div">
         <center><i style="font-size: 72px" class="fas fa-file-signature"></i></center>
-        <h1 class="h3" style="text-align: center;">Add Your Smart Contract to Database</h1>
+        <h1 class="h3" style="text-align: center;">Add Your Smart Contracts to Database</h1>
         <label for="title">Title</label>
         <input id="title" class="form-control" placeholder="Title">
         <label for="solidityCode">New Solidity Code</label>
@@ -28,17 +28,31 @@
       </div>  
       <hr>
       <div class="center_div">
-        <center><i style="font-size: 72px" class="fas fa-cubes"></i></center>
-        <h1 class="h3" style="text-align: center;">Deploy Smart Contract to Blackchain</h1>
+        <center><i style="font-size: 72px" class="fas fa-database"></i></center>
+        <h1 class="h3" style="text-align: center;">All Smart Contracts in Database</h1>
         <label for="allSmartContracts">Existing Solidity Code in Database</label>
         <select class="form-control" id="allSmartContracts">
         </select>
         <pre><code class="language-javascript" id="theCode"></code></pre>
-        <label for="allAddresses">Address in Database</label>
-        <select class="form-control" id="allAddresses">
+        <label for="allAddresses1">Address in Database</label>
+        <select class="form-control" id="allAddresses1">
         </select>
-        <label>Balance in the selected address: </label><span style="font-size: 22px;" id="theBalance"></span>
+        <label>Balance in the selected address: </label><span style="font-size: 22px;" id="theBalance1"></span>
         <button class="btn btn-primary btn-block" onclick="deploySmartContract();"><i class="fas fa-cube"></i> Deploy to Blackchain</button>
+      </div>
+      <hr>
+      <div class="center_div">
+        <center><i style="font-size: 72px" class="fas fa-cubes"></i></center>
+        <h1 class="h3" style="text-align: center;">All Deployed Smart Contracts</h1>
+        <label for="allDeployedSmartContracts">Deployed Smart Contracts</label>
+        <select class="form-control" id="allDeployedSmartContracts">
+        </select>
+        <pre><code class="language-javascript" id="abi"></code></pre>
+        <label for="allAddresses2">Address in Database</label>
+        <select class="form-control" id="allAddresses2">
+        </select>
+        <label>Balance in the selected address: </label><span style="font-size: 22px;" id="theBalance2"></span>
+        <button class="btn btn-primary btn-block" onclick="callTheFunction();"><i class="fas fa-cube"></i> Call A Function</button>
       </div>
     </div>
   </div>
@@ -46,6 +60,34 @@
 
 <script>
   let gAllSmartContracts = [];
+  let gAllDeployedSmartContracts = [];
+
+  function getAllDeployedSmartContracts() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/db/smartcontract/deployed/all/';
+    
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        console.log(data);
+
+        gAllDeployedSmartContracts = [];
+
+        $.each(data.smartContracts, function(idx, ele) {
+          $('#allDeployedSmartContracts').append(new Option(ele.address, ele.id));
+          gAllDeployedSmartContracts.push({"idx": ele.id, "abi": JSON.parse(ele.abi)});
+        });
+
+        if (gAllDeployedSmartContracts.length > 0) {
+          $('#allDeployedSmartContracts').trigger("change");
+        }
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
 
   function getAllSmartContracts() {
     const urlTarget = window.location.protocol + "//" + window.location.host + '/db/smartcontract/all/';
@@ -103,11 +145,13 @@
       success: function(data) {
         // $("#allAddresses").empty();
         $.each(data.addresses, function(idx, ele) {
-          $('#allAddresses').append(new Option(ele.address, ele.address));
+          $('#allAddresses1').append(new Option(ele.address, ele.address));
+          $('#allAddresses2').append(new Option(ele.address, ele.address));
         });
 
         if (data.addresses.length > 0) {
-          $('#allAddresses').trigger("change"); 
+          $('#allAddresses1').trigger("change"); 
+          $('#allAddresses2').trigger("change"); 
         }
       },
       error: function(xhr, textStatus, errorThrown) {
@@ -124,7 +168,8 @@
       dataType: 'json',
       url: urlTarget,
       success: function(data) {
-        $("#theBalance").text(` ${data["balance"]}`);
+        $("#theBalance1").text(` ${data["balance"]}`);
+        $("#theBalance2").text(` ${data["balance"]}`);
       },
       error: function(xhr, textStatus, errorThrown) {
         $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
@@ -138,7 +183,7 @@
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({
-        addr: $('#allAddresses option:selected').val(),
+        addr: $('#allAddresses1 option:selected').val(),
         idx: $('#allSmartContracts option:selected').val()
       }),
       dataType: 'json',
@@ -160,13 +205,22 @@
     hljs.highlightAll();
   });
 
-  $("#allAddresses").change(function() {
+  $("#allDeployedSmartContracts").change(function() {
+    const idx = $(this).val();
+    const code = gAllDeployedSmartContracts.filter(x => x.idx == idx)[0].abi;
+
+    $("#abi").text(JSON.stringify(code, undefined, 2));
+    hljs.highlightAll();
+  });
+
+  $("#allAddresses1").change(function() {
     getBalance($(this).val());
   });
 
   $(document).ready(function() {
     getAllAddresses();
     getAllSmartContracts();
+    getAllDeployedSmartContracts();
   });
 </script>
 

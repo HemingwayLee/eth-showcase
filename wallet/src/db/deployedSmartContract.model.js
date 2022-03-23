@@ -1,33 +1,36 @@
 const orm = require("./db.config")
 
-exports.addDeployedSmartContract = async (abi, bytecode, address) => {
-//   let result = { isSucceeded: true };
+exports.addDeployedSmartContract = async (abi, bytecode, address, hash) => {
+  let result = { isSucceeded: true };
 
-//   await orm.conn.then(async conn => {
-//     const repo = await conn.getRepository("SmartContract");
-//     await repo.save({
-//       code: code,
-//       createdAt: Date.now()
-//     });
-//   }).catch(error => {
-//     result = { isSucceeded: false, msg: error.message }
-//     console.log(error);
-//   });
+  await orm.conn.then(async conn => {
+    const repo = await conn.getRepository("DeployedSmartContract");
+    await repo.save({
+      abi: JSON.stringify(abi),
+      address: address,
+      transaction: hash,
+      bytecode: bytecode,
+      deployedAt: Date.now()
+    });
+  }).catch(error => {
+    result = { isSucceeded: false, msg: error.message }
+    console.log(error);
+  });
 
-//   return result;
+  return result;
 }
 
 exports.getAllDeployedSmartContract = async () => {
-//   let result = { isSucceeded: true, smartContracts: [] };
+  let result = { isSucceeded: true, smartContracts: [] };
   
-//   await orm.conn.then(async conn => {
-//     const repo = await conn.getRepository("SmartContract");
-//     result.smartContracts = await repo.find();
-//   }).catch(error => {
-//     result = { isSucceeded: false, msg: error.message }
-//     console.log(error);
-//   });
+  await orm.conn.then(async conn => {
+    const repo = await conn.getRepository("DeployedSmartContract");
+    result.smartContracts = await repo.find();
+  }).catch(error => {
+    result = { isSucceeded: false, msg: error.message }
+    console.log(error);
+  });
 
-//   return result;
+  return result;
 }
 
