@@ -27,7 +27,132 @@ function _range(start, stop, step) {
   }
 
   return result;
-};
+}
+
+function invokeAFunction(isCall, res, walletAddress, contractAddress, abi, name, parameter) {
+  const url = `https://ropsten.infura.io/v3/${process.env.PROJECT_ID}`;
+  const w3 = new Web3(new Web3.providers.HttpProvider(url));
+    
+  console.log(abi);
+  let contract = new w3.eth.Contract(abi, contractAddress);
+  let func = null;
+  if (parameter && parameter != "") {
+    console.log("!!!!!! 2")
+    console.log(parameter)
+    func = contract.methods[name](parameter)
+    console.log("!!!!!! 1")
+  } else {
+    func = contract.methods[name]()
+  }
+  
+  if (isCall) {
+    callAFunction(func, res, walletAddress)
+  } else {
+    console.log("SEND!!!!! it hangs here")
+    // sendAFunction(func, res, walletAddress)
+    
+    contract.methods.set(12).send({
+      from: walletAddress,
+      gas: 3500000
+    }, function(err, transactionHash) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("function", transactionHash);
+      }
+    })
+    .on('transactionHash', function(hash) {
+      console.log('transaction hash ', hash);
+      // w3.eth.getTransaction(hash, async function (err, data) {
+      //   const ret = await modelTransaction.insertTransaction(data);
+      // });
+    })
+    .on('receipt', async function(receipt) {
+      console.log('Transaction is mined');
+      console.log(receipt)
+      // const ret1 = await modelTransaction.updateTransaction(receipt);
+      // if (ret1.isSucceeded) {
+      //   const ret2 = await modelDeployedSmartContract.addDeployedSmartContract(
+      //     abi, 
+      //     bytecode, 
+      //     receipt.contractAddress,
+      //     receipt.transactionHash);
+      //   if (ret2.isSucceeded) {
+      //     res.status(200).send({ isSucceeded: true });
+      //   } else {
+      //     res.status(500).send(ret2);
+      //   }
+      // } else {
+      //   res.status(500).send(ret1);
+      // }
+    })
+    .on('confirmation', function(confirmationNum, receipt) {
+      console.log('confirmation ', confirmationNum);
+    })
+    .catch((err) => {
+      res.status(500).send({ isSucceeded: true, msg: error.message });
+      return;
+    });
+  }
+}
+
+function callAFunction(func, res, walletAddress) {
+  func.call({
+    from: walletAddress
+  }, function(err, result) {
+    if (err) {
+      console.log(err);
+      res.status(500).send({isSucceeded: false, msg: err.message});
+    } else {
+      res.status(200).send({isSucceeded: true, result: result});
+    }
+  });
+}
+
+function sendAFunction(func, res, walletAddress) {
+  func.send({
+    from: walletAddress,
+    gas: 3500000
+  }, function(err, transactionHash) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("function", transactionHash);
+    }
+  })
+  .on('transactionHash', function(hash) {
+    console.log('transaction hash ', hash);
+    w3.eth.getTransaction(hash, async function (err, data) {
+      const ret = await modelTransaction.insertTransaction(data);
+    });
+  })
+  .on('receipt', async function(receipt) {
+    console.log('Transaction is mined');
+    console.log(receipt)
+    // const ret1 = await modelTransaction.updateTransaction(receipt);
+    // if (ret1.isSucceeded) {
+    //   const ret2 = await modelDeployedSmartContract.addDeployedSmartContract(
+    //     abi, 
+    //     bytecode, 
+    //     receipt.contractAddress,
+    //     receipt.transactionHash);
+    //   if (ret2.isSucceeded) {
+    //     res.status(200).send({ isSucceeded: true });
+    //   } else {
+    //     res.status(500).send(ret2);
+    //   }
+    // } else {
+    //   res.status(500).send(ret1);
+    // }
+  })
+  .on('confirmation', function(confirmationNum, receipt) {
+    console.log('confirmation ', confirmationNum);
+  })
+  .catch((err) => {
+    res.status(500).send({ isSucceeded: true, msg: error.message });
+    return;
+  });
+}
 
 exports.create = async (req, res) => {
   const url = `https://ropsten.infura.io/v3/${process.env.PROJECT_ID}`;
@@ -111,6 +236,30 @@ exports.addAccount = async (req, res) => {
     res.status(200).send(account);
   } else {
     res.status(500).send(result);
+  }
+}
+
+exports.invokeSmartContract = async (req, res) => {
+  try {
+    const { contractAddress, walletAddress, name, parameter } = req.body;
+    // console.log(contractAddress)
+    // console.log(walletAddress)
+    // console.log(name)
+    // console.log(`parameter: '${parameter}'`)
+
+    let result = await modelDeployedSmartContract.getDeployedSmartContractByAddr(contractAddress);
+    if (result.isSucceeded) {
+      const abi = JSON.parse(result.theContract.abi);
+      const theFunc = abi.filter(f => {
+        return f.name == name
+      });
+
+      return invokeAFunction(theFunc[0].constant, res, walletAddress, contractAddress, abi, name, parameter);
+    } else {
+      res.status(500).send(result);
+    }
+  } catch (error) {
+    res.status(500).send({ isSucceeded: false, msg: error.message });
   }
 }
 

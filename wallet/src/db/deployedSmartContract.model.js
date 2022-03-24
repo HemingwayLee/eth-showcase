@@ -34,3 +34,20 @@ exports.getAllDeployedSmartContract = async () => {
   return result;
 }
 
+exports.getDeployedSmartContractByAddr = async (addr) => {
+  let result = { isSucceeded: true, theContract: null };
+  
+  await orm.conn.then(async conn => {
+    const repo = await conn.getRepository("DeployedSmartContract");
+    result.theContract = await repo.findOne(
+      { 
+        where: { address: addr }
+      }
+    );
+  }).catch(error => {
+    result = { isSucceeded: false, msg: error.message }
+    console.log(error);
+  });
+
+  return result;
+}

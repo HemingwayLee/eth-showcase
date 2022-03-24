@@ -51,8 +51,14 @@
         <label for="allAddresses2">Address in Database</label>
         <select class="form-control" id="allAddresses2">
         </select>
+        <label for="functions">Functions</label>
+        <select class="form-control" id="functions">
+        </select>
+        <label for="parameters">Parameters</label>
+        <input id="parameters" class="form-control" placeholder="Parameters">
         <label>Balance in the selected address: </label><span style="font-size: 22px;" id="theBalance2"></span>
         <button class="btn btn-primary btn-block" onclick="callTheFunction();"><i class="fas fa-cube"></i> Call A Function</button>
+        <pre><code class="language-javascript" id="theResult"></code></pre>
       </div>
     </div>
   </div>
@@ -61,6 +67,7 @@
 <script>
   let gAllSmartContracts = [];
   let gAllDeployedSmartContracts = [];
+  let gIdxDeployedSc = null;
 
   function getAllDeployedSmartContracts() {
     const urlTarget = window.location.protocol + "//" + window.location.host + '/db/smartcontract/deployed/all/';
@@ -76,7 +83,7 @@
 
         $.each(data.smartContracts, function(idx, ele) {
           $('#allDeployedSmartContracts').append(new Option(ele.address, ele.id));
-          gAllDeployedSmartContracts.push({"idx": ele.id, "abi": JSON.parse(ele.abi)});
+          gAllDeployedSmartContracts.push({"idx": ele.id, "address": ele.address, "abi": JSON.parse(ele.abi)});
         });
 
         if (gAllDeployedSmartContracts.length > 0) {
@@ -197,6 +204,52 @@
     });
   }
 
+  function callTheFunction() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/eth/smartcontract/deployed/invoke';
+    $.ajax({
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        contractAddress: gAllDeployedSmartContracts.filter(x => x.idx == gIdxDeployedSc)[0].address,
+        walletAddress: $('#allAddresses2 option:selected').val(),
+        name: $('#functions option:selected').val(),
+        parameter: $('#parameters').val()
+      }),
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        $("#theResult").text(JSON.stringify(data));
+        alert("SUCCEEDED");
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
+  function parseAbi(abi) {
+    $.each(abi, function(idx, ele) {
+      $('#functions').append(new Option(ele.name, ele.name));
+    });
+
+    $('#functions').trigger("change");
+  }
+
+  $("#functions").change(function(e) {
+    const abi = gAllDeployedSmartContracts.filter(x => x.idx == gIdxDeployedSc)[0].abi;
+    const name = $(this).val();
+    const theFunc = abi.filter(x => x.name == name);
+
+    console.log(theFunc[0])
+    if (theFunc[0].inputs.length == 0) {
+      $("#parameters").prop('disabled', true);
+    } else {
+      $("#parameters").prop('disabled', false);
+    }
+
+    $("#theResult").text("");
+  });
+
   $("#allSmartContracts").change(function() {
     const idx = $(this).val();
     const code = gAllSmartContracts.filter(x => x.idx == idx)[0].code
@@ -206,11 +259,13 @@
   });
 
   $("#allDeployedSmartContracts").change(function() {
-    const idx = $(this).val();
-    const code = gAllDeployedSmartContracts.filter(x => x.idx == idx)[0].abi;
+    gIdxDeployedSc = $(this).val();
+    const code = gAllDeployedSmartContracts.filter(x => x.idx == gIdxDeployedSc)[0].abi;
 
     $("#abi").text(JSON.stringify(code, undefined, 2));
     hljs.highlightAll();
+
+    parseAbi(code);
   });
 
   $("#allAddresses1").change(function() {
