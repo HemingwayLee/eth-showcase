@@ -10,8 +10,8 @@ async function main() {
   w3.eth.accounts.wallet.add(process.env.PRIVATE_KEY);
   w3.eth.sendTransaction({
     from: process.env.PUBLIC_KEY, 
-    to: '0x55a4C9Fa84fDC073aaf92c2A2912aaFF2A5c77b8', 
-    value: w3.utils.toWei('1', 'ether'), 
+    to: '0x566119e0B59A2FeDD697d4a1072a834cBA0A2a20', 
+    value: w3.utils.toWei('0.1', 'ether'), 
     gasLimit: 21000, 
     gasPrice: 20000000000
   }, function (err, transactionHash) {
