@@ -14,7 +14,19 @@ async function main() {
   
   //call and send
   // call don't need to alter the status in SC, so we don't need to pay ETH
-  contract.methods.get().call({
+  
+  // NOTE: it works
+  // contract.methods.get().call({
+  //   from: process.env.PUBLIC_KEY
+  // }, function(err, res) {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     console.log("The result is", res);
+  //   }
+  // });
+
+  contract.methods["get"]().call({
     from: process.env.PUBLIC_KEY
   }, function(err, res) {
     if (err) {
@@ -22,7 +34,7 @@ async function main() {
     } else {
       console.log("The result is", res);
     }
-  });
+  })
 }
 
 main();
