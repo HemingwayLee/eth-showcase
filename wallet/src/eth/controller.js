@@ -308,7 +308,10 @@ exports.deploySmartContract = async (req, res) => {
     .on('transactionHash', function(hash) {
       console.log('transaction hash ', hash);
       w3.eth.getTransaction(hash, async function (err, data) {
-        const ret = await modelTransaction.insertTransaction(data);
+        // when the network is slow, data might be null
+        if (data) {
+          const ret = await modelTransaction.insertTransaction(data);
+        }
       });
     })
     .on('receipt', async function(receipt) {
@@ -336,7 +339,7 @@ exports.deploySmartContract = async (req, res) => {
       console.log('then ', newContractInstance.options.address);
     })
     .catch((err) => {
-      res.status(500).send({ isSucceeded: true, msg: error.message });
+      res.status(500).send({ isSucceeded: true, msg: err.message });
       return;
     });
   } catch (error) {
