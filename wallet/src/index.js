@@ -27,8 +27,15 @@ async function initData(conn) {
   }).catch(error => {
     console.log(error);
   });
-}
 
+  await conn.then(async conn => {
+    const repo = await conn.getRepository("DeployedSmartContract");
+    await repo.clear();
+    await repo.save(ret.scEntries);
+  }).catch(error => {
+    console.log(error);
+  });
+}
 
 function addRoutes(app) {
   pageRoutes.routesConfig(app);

@@ -167,7 +167,7 @@
     });
   }
 
-  function getBalance(addr) {
+  function getBalance(addr, id) {
     const urlTarget = window.location.protocol + "//" + window.location.host + '/eth/balance/' + addr;
     
     $.ajax({
@@ -175,8 +175,8 @@
       dataType: 'json',
       url: urlTarget,
       success: function(data) {
-        $("#theBalance1").text(` ${data["balance"]}`);
-        $("#theBalance2").text(` ${data["balance"]}`);
+        $(`#theBalance${id}`).text(` ${data["balance"]}`);
+        $(`#theBalance${id}`).text(` ${data["balance"]}`);
       },
       error: function(xhr, textStatus, errorThrown) {
         $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
@@ -228,6 +228,7 @@
   }
 
   function parseAbi(abi) {
+    $('#functions').empty();
     $.each(abi, function(idx, ele) {
       $('#functions').append(new Option(ele.name, ele.name));
     });
@@ -269,7 +270,11 @@
   });
 
   $("#allAddresses1").change(function() {
-    getBalance($(this).val());
+    getBalance($(this).val(), 1);
+  });
+
+  $("#allAddresses2").change(function() {
+    getBalance($(this).val(), 2);
   });
 
   $(document).ready(function() {
