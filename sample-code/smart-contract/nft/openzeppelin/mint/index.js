@@ -7,8 +7,10 @@ async function mint(img) {
   const url = 'https://ropsten.infura.io/v3/' + process.env.PROJECT_ID;
   const w3 = new Web3(new Web3.providers.HttpProvider(url));
   
-  const abi = JSON.parse(fs.readFileSync('LeeYunWei.abi', 'utf8'));
-  const contractAddr = "0x1828e0ffc058b961b8d06686bcbd4582826087ae";
+  const abi = JSON.parse(fs.readFileSync('LeeYunWei2.abi', 'utf8'));
+  // This is ERC-721 extension
+  const contractAddr = "0x0d509954fd1044ff7c3568e2be579B409b7122f5"
+  // const contractAddr = "0x1828e0ffc058b961b8d06686bcbd4582826087ae";
   
   w3.eth.accounts.wallet.add(process.env.PRIVATE_KEY);
 
@@ -41,4 +43,4 @@ async function mint(img) {
   });
 }
 
-mint("https://raw.githubusercontent.com/HemingwayLee/eth-showcase/master/sample-code/smart-contract/nft/openzeppelin/mint/LeeYunWei3.metadata.json");
+mint("https://raw.githubusercontent.com/HemingwayLee/eth-nft-showcase/main/metadata/LeeYunWei3.metadata.json");
