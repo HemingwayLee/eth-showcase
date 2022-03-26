@@ -41,4 +41,4 @@ async function mint(img) {
   });
 }
 
-mint("https://raw.githubusercontent.com/HemingwayLee/ropsten-wallet/master/sample-code/smart-contract/nft/openzeppelin/mint/LeeYunWei.metadata.json");
+mint("https://raw.githubusercontent.com/HemingwayLee/eth-showcase/master/sample-code/smart-contract/nft/openzeppelin/mint/LeeYunWei3.metadata.json");

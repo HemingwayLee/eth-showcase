@@ -11,4 +11,6 @@ docker build -t myeth .
 docker run -it --rm myeth
 ```
 
+# Note
+* make sure the `xxx.metadata.json` address do exist
 
