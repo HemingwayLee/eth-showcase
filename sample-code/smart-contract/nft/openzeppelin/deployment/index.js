@@ -7,8 +7,8 @@ async function main() {
   const url = 'https://ropsten.infura.io/v3/' + process.env.PROJECT_ID;
   const w3 = new Web3(new Web3.providers.HttpProvider(url));
 
-  const bytecode = `0x${fs.readFileSync('LeeYunWei.bin', 'utf8')}`;
-  const abi = JSON.parse(fs.readFileSync('LeeYunWei.abi', 'utf8'));
+  const bytecode = `0x${fs.readFileSync('LeeYunWei2.bin', 'utf8')}`;
+  const abi = JSON.parse(fs.readFileSync('LeeYunWei2.abi', 'utf8'));
 
   w3.eth.accounts.wallet.add(process.env.PRIVATE_KEY);
 
