@@ -18,7 +18,7 @@
     "randomstring": "^1.2.2",
     "solc": "^0.8.13",
     "typeorm": "^0.2.45",
-    "web3": "^1.7.1"
+    "web3": "^1.7.0"
   },
   "nodemonConfig": {
     "watch": [

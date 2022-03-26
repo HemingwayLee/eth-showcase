@@ -2,8 +2,8 @@
   {
     "abi": "hello.abi",
     "bytecode": "hello.bin",
-    "address": "0xB62242f54E11f9B14DB9f0c3E62565E3D67f6dC2",
-    "transaction": "0x32b19c94d19f8e45469845d931cd404358aeb317755ff621e1b570e56e58acfc"
+    "address": "0x1a4e87768D1f2afBd8912Bcee9D58c929265d8fa",
+    "transaction": "0x2e24af98c492e815e6abfc61a651f0d0e091741a3795dc3f66773df44710940a"
   },
   {
     "abi": "LeeYunWei.abi",
