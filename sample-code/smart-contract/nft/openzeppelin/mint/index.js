@@ -43,4 +43,4 @@ async function mint(img) {
   });
 }
 
-mint("https://raw.githubusercontent.com/HemingwayLee/eth-nft-showcase/main/metadata/LeeYunWei3.metadata.json");
+mint("https://raw.githubusercontent.com/HemingwayLee/eth-nft-showcase/main/metadata/LeeYunWei4.metadata.json");
