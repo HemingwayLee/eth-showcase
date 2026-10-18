@@ -8,6 +8,7 @@ WORKDIR /home/app/
 
 RUN npm install -g nodemon
 RUN npm install .
+RUN npm install abortcontroller-polyfill
 RUN npm ls
 
 ENTRYPOINT npm start && /bin/bash
